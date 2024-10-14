@@ -1,90 +1,65 @@
 package com.amigoscode;
 
 
-import java.util.Random;
 import java.util.Scanner;
 
-public class Main {
+    public class Main {
 
+        public static void main(String[] args) {
+            Scanner sc = new Scanner(System.in);
 
-            public static void main(String[] args) {
-                    Scanner scanner = new Scanner(System.in);
-                    Random random = new Random();
-                    boolean playAgain = false;
+            boolean continueInput = true;
 
-                    do {
+            while (continueInput) {
+                System.out.println("Enter the number of subjects: ");
+                int numSubjects = sc.nextInt();
 
-                        System.out.print("Choose difficulty level (easy, medium, hard): ");
-                        String difficulty = scanner.nextLine().trim().toLowerCase();
-                        int maxAttempts = 0;
+                if (numSubjects <= 0) {
+                    System.out.println("Please enter a valid number of subjects.");
+                    return;
+                }
+                int totalMarks = 0;
+                int maxMarkPerSubject = 100;
 
+                for (int i = 1; i <= numSubjects; i++) {
+                    System.out.println("Enter marks obtained in Subject " + i + " (out of 100):");
+                    int marks = sc.nextInt();
 
-                        if (difficulty.equals("easy")) {
-                            maxAttempts = 10;
-                        }
-                        else if (difficulty.equals("medium")) {
-                            maxAttempts = 7;
-                        }
-                        else if (difficulty.equals("hard")) {
-                            maxAttempts = 5;
-                        } else {
-                            System.out.println("Invalid difficulty level. Please try again.");
-                            continue;
-                        }
-
-                        int numberToGuess = random.nextInt(100) + 1;
-                        int attemptsLeft = maxAttempts;
-
-                        System.out.println("I have selected a number between 1 and 100. You have " + maxAttempts + " attempts to guess it.");
-
-
-                        while (attemptsLeft > 0) {
-                            System.out.print("Enter your guess: ");
-                            int guess = getGuess(scanner);
-
-
-                            if (guess < 1 || guess > 100) {
-                                System.out.println("Please enter a number between 1 and 100.");
-                                continue; // Skip to the next iteration
-                            }
-
-
-                            if (guess < numberToGuess) {
-                                System.out.println("Too low! Try again.");
-                            } else if (guess > numberToGuess) {
-                                System.out.println("Too high! Try again.");
-                            } else {
-                                System.out.println("Congratulations! You guessed the number " + numberToGuess + " correctly!");
-                                break;
-                            }
-
-                            attemptsLeft--;
-                            System.out.println("You have " + attemptsLeft + " attempts left.");
-                        }
-
-                        if (attemptsLeft == 0) {
-                            System.out.println("Sorry, you've run out of attempts! The number was " + numberToGuess + ".");
-                        }
-
-
-                        System.out.print("Do you want to play again? (yes/no): ");
-                        String response = scanner.nextLine().trim().toLowerCase();
-                        playAgain = response.equals("yes");
-
-                    } while (playAgain);
-
-                    System.out.println("Thank you for playing! Goodbye!");
-                    scanner.close();
+                    if (marks < 0 || marks > maxMarkPerSubject) {
+                        System.out.println("Marks should be in the range of 0 to 100. Please enter valid marks.");
+                        i--; // Decrement i to repeat the subject input
+                    } else {
+                        totalMarks += marks;
+                    }
                 }
 
+                double averagePercentage = (double) totalMarks / (numSubjects * maxMarkPerSubject) * 100;
+                System.out.println("Total marks: " + totalMarks);
+                System.out.println("Average percentage: " + averagePercentage + "%");
 
-                private static int getGuess(Scanner scanner) {
-                    try {
-                        return Integer.parseInt(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        return -1;
-                    }
+                String grade;
 
+                if (averagePercentage >= 90) {
+                    grade = "A+";
+                } else if (averagePercentage >= 80) {
+                    grade = "A";
+                } else if (averagePercentage >= 70) {
+                    grade = "B";
+                } else if (averagePercentage >= 60) {
+                    grade = "C";
+                } else if (averagePercentage >= 50) {
+                    grade = "D";
+                } else {
+                    grade = "F";
+                }
+                System.out.println("Grade: " + grade);
 
+                // Ask if the user wants to add another student
+                System.out.println("Do you want to enter details for another student? (yes/no)");
+                String response = sc.next();
+                continueInput = response.equalsIgnoreCase("yes");
             }
+
+            sc.close();
         }
+    }
